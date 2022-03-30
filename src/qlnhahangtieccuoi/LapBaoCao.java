@@ -1,0 +1,599 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package qlnhahangtieccuoi;
+
+import Process.BaoCao;
+import Process.HopDong;
+import Process.NhanVien;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Thang Le
+ */
+public class LapBaoCao extends javax.swing.JFrame {
+
+    private final DefaultTableModel tableModel = new DefaultTableModel();
+    private final DefaultTableModel tableMode2 = new DefaultTableModel();
+    NhanVien nv = new NhanVien();
+    BaoCao bc = new BaoCao();
+    HopDong hd = new HopDong();
+    /**
+     * Creates new form LapBaoCao
+     */
+    public LapBaoCao() throws SQLException {
+        
+        initComponents();
+        ImageIcon img = new ImageIcon("E:\\java\\QLNhaHang\\QLNhaHangTiecCuoi\\src\\Database/2.jpg");
+        this.setIconImage(img.getImage());
+        String []colsName = {"Mã Nhân Viên", "Tên Nhân Viên", "SDT","Địa Chỉ", "Chức Vụ"};
+        String []colsName1 = {"Mã Đặt Tiệc","Mã Dịch Vụ","Mã Khách Hàng","Mã Thực Đơn","Mã Nhân Viên", "Số Lượng Nhân Viên","Số Lượng Bàn","Tổng Tiền"};
+
+
+     // đặt tiêu đề cột cho tableModel
+        tableModel.setColumnIdentifiers(colsName);
+        tableMode2.setColumnIdentifiers(colsName1); 
+
+        // kết nối jtable với tableModel 
+        tabNV.setModel(tableModel);
+        tabDT.setModel(tableMode2); 
+        
+        //gọi hàm ShowData để đưa dữ liệu vào tableModel 
+        ShowData(); 
+        ShowDT();
+        ShowDataCmbNV();
+        Dem();
+        Tong();
+        ShowDataKH();
+    }
+    
+    public void Tong()
+    {
+        double sum = 0;
+        double total = 0;   
+        for(int i = 0; i < tabDT.getRowCount();  i++ )
+           {              
+               sum = Double.parseDouble(tabDT.getValueAt(i, 7).toString());
+               total += sum;
+               
+           }
+        DecimalFormat formatter = new DecimalFormat("###");
+        txtChiPhiToChuc.setText(formatter.format(total));
+        
+    }
+    
+    public void Dem()
+    {
+        
+        try{
+           int sum = 0;
+           
+           for(int i = 0; i < tabDT.getRowCount();  i++ )
+           {
+               
+               sum = Integer.parseInt(tabDT.getValueAt(i, 2).toString().trim());
+               //sum = sum + Integer.parseInt((String) tabDT.getValueAt(i, 2));
+           }
+           DecimalFormat formatter = new DecimalFormat("###");
+           txtSoLuongDat.setText(Integer.toString(sum));
+           
+           
+         }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,e);
+        }
+    }
+    public void ShowData() throws SQLException{ 
+        ResultSet result= nv.ShowNhanVien(); 
+    try { 
+        while(result.next()){ // nếu còn đọc tiếp được một dòng dữ liệu
+        String rows[] = new String[5];
+        rows[0] = result.getString(1); // lấy dữ liệu tại cột số 1 (ứng với mã hàng)
+        rows[1] = result.getString(2);
+        rows[2] = result.getString(3); 
+        rows[3] = result.getString(4);
+        rows[4] = result.getString(5);
+
+        tableModel.addRow(rows); // đưa dòng dữ liệu vào tableModel 
+        //mỗi lần có sự thay đổi dữ liệu ở tableModel thì Jtable sẽ tự động update 
+        //txtSumClient.Text = tabDT.Rows.Count.ToString();
+    }
+    } 
+    catch (SQLException e) {
+        
+    } 
+    } 
+    public void ShowDT() throws SQLException{ 
+    try { 
+        ResultSet result= hd.ShowTTDT();
+        //ResultSet resultDT= hd.ShowTTDT();
+        while(result.next())
+        { // nếu còn đọc tiếp được một dòng dữ liệu
+            String rows[] = new String[8];
+             // lấy dữ liệu tại cột số 1 (ứng với mã dt)
+            rows[0] = result.getString(1);
+            rows[1] = result.getString(2); 
+            rows[2] = result.getString(3);
+            rows[3] = result.getString(4);
+            rows[4] = result.getString(5);
+            rows[5] = result.getString(6);
+            rows[6] = result.getString(7);            
+            rows[7] = result.getString(8);
+            
+            tableMode2.addRow(rows); // đưa dòng dữ liệu vào tableModel     
+              
+        }
+        
+    } 
+    catch (SQLException e) {
+        JOptionPane.showMessageDialog(null,e);
+    } 
+    } 
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        txtMaBC = new javax.swing.JTextField();
+        txtTenNV = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        txtSoLuongDat = new javax.swing.JTextField();
+        txtChiPhiToChuc = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabNV = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tabDT = new javax.swing.JTable();
+        btnThoat = new javax.swing.JButton();
+        btnQuayVeMenu = new javax.swing.JButton();
+        btnXemBaoCao = new javax.swing.JButton();
+        btnLuuBaoCao = new javax.swing.JButton();
+        cmbMaNV = new javax.swing.JComboBox();
+        txtNgayLap = new com.toedter.calendar.JDateChooser();
+        jLabel8 = new javax.swing.JLabel();
+        txtMaBC1 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel1.setText("Lập Báo Cáo");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 11, -1, -1));
+        getContentPane().add(txtMaBC, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 120, 190, 37));
+
+        txtTenNV.setEnabled(false);
+        getContentPane().add(txtTenNV, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 152, 190, 37));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setText("Mã nhân Viên:");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(576, 96, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel3.setText("Tên Nhân Viên:");
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(576, 163, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setText("Mã Báo Cáo:");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(91, 133, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel5.setText("Ngày Lập:");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 190, -1, -1));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Nội dung báo cáo"));
+
+        txtSoLuongDat.setEnabled(false);
+
+        txtChiPhiToChuc.setEnabled(false);
+
+        jLabel6.setText("Số lượng tiệc cưới đã đặt:");
+
+        jLabel7.setText("Tổng tiền tiệc cưới:");
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách nhân viên đang còn làm"));
+
+        tabNV.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tabNV);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 931, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 206, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách tiệc cưới sắp diễn ra"));
+
+        tabDT.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(tabDT);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel7))
+                        .addGap(49, 49, 49)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtSoLuongDat, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtChiPhiToChuc, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(txtSoLuongDat, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtChiPhiToChuc, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(33, 214, -1, -1));
+
+        btnThoat.setText("Thoát");
+        btnThoat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThoatActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnThoat, new org.netbeans.lib.awtextra.AbsoluteConstraints(988, 855, -1, 44));
+
+        btnQuayVeMenu.setText("Quay về Menu");
+        btnQuayVeMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnQuayVeMenuActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnQuayVeMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 866, -1, 44));
+
+        btnXemBaoCao.setText("Xem Danh Sách Báo Cáo ");
+        btnXemBaoCao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXemBaoCaoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnXemBaoCao, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 855, -1, 44));
+
+        btnLuuBaoCao.setText("Lưu Báo Cáo");
+        btnLuuBaoCao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuBaoCaoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnLuuBaoCao, new org.netbeans.lib.awtextra.AbsoluteConstraints(849, 855, -1, 44));
+
+        cmbMaNV.setToolTipText("");
+        cmbMaNV.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cmbMaNVItemStateChanged(evt);
+            }
+        });
+        cmbMaNV.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+                cmbMaNVAncestorRemoved(evt);
+            }
+        });
+        cmbMaNV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbMaNVActionPerformed(evt);
+            }
+        });
+        getContentPane().add(cmbMaNV, new org.netbeans.lib.awtextra.AbsoluteConstraints(704, 87, 190, 32));
+        getContentPane().add(txtNgayLap, new org.netbeans.lib.awtextra.AbsoluteConstraints(234, 177, 190, 37));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel8.setText("Mã Báo Cáo Trước:");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(91, 76, -1, -1));
+
+        txtMaBC1.setEnabled(false);
+        getContentPane().add(txtMaBC1, new org.netbeans.lib.awtextra.AbsoluteConstraints(234, 65, 190, 37));
+
+        jLabel9.setIcon(new javax.swing.ImageIcon("F:\\Tai_xuong_Google\\TiecCuoi_Image\\nen.jpg")); // NOI18N
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1080, 920));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnQuayVeMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuayVeMenuActionPerformed
+        // TODO add your handling code here:
+        Menu menu = new Menu();
+        menu.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_btnQuayVeMenuActionPerformed
+
+    public final void ShowDataCmbNV()
+    {
+        ResultSet result = null;
+        try{
+            result = nv.ShowNhanVien();
+            while(result.next())
+            {
+                this.cmbMaNV.addItem(result.getString("MaNhanVien"));
+            }
+        }
+        catch(SQLException e)
+        {
+            
+        }
+    }
+    public void ShowTenNV(String MaNV) throws SQLException
+    {
+            ResultSet result = nv.ShowNhanVien(MaNV);
+            if(result.next())
+            {
+                txtTenNV.setText(result.getString("TenNhanVien"));
+            }
+    
+    }
+    private void cmbMaNVItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbMaNVItemStateChanged
+        // TODO add your handling code here:
+
+        String MaNV = this.cmbMaNV.getSelectedItem().toString();
+        try {
+            ShowTenNV(MaNV);
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(LapBaoCao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_cmbMaNVItemStateChanged
+
+    private void cmbMaNVAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_cmbMaNVAncestorRemoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbMaNVAncestorRemoved
+
+    private void cmbMaNVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbMaNVActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbMaNVActionPerformed
+
+    private void btnXemBaoCaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXemBaoCaoActionPerformed
+        try {
+            // TODO add your handling code here:
+            XemDSBaoCao xemds = new XemDSBaoCao();
+            xemds.setVisible(true);
+            setVisible(false);
+        } catch (SQLException ex) {
+            Logger.getLogger(LapBaoCao.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnXemBaoCaoActionPerformed
+
+    private void btnThoatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThoatActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnThoatActionPerformed
+
+    public final void ShowDataKH()
+    {
+        ResultSet result = null;
+        try{
+            result = bc.ShowBaoCao();
+            while(result.next())
+            {                             
+                txtMaBC1.setText(String.valueOf(result.getInt(1)));
+            }
+        }
+        catch(SQLException e)
+        {
+            
+        }
+    }
+    private void btnLuuBaoCaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuBaoCaoActionPerformed
+        // TODO add your handling code here:
+        try{
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=QLNhaHangTC;user=sa;password=123456";
+            Connection con = DriverManager.getConnection(url);
+            String sql = "insert into BaoCao" + "(MaBaoCao,MaNhanVien,NgayLap,TenNguoiLap,SoLuongTiec,DoanhThu)"
+                    +("values(?,?,?,?,?,?)");
+            
+            PreparedStatement pst = con.prepareStatement(sql);
+            
+            
+            String MaBC = txtMaBC.getText();
+            java.util.Date date = txtNgayLap.getDate();
+            String NgayLap = DateFormat.getDateInstance().format(date);
+            String TenNhanVien = txtTenNV.getText();
+            String MaNV = this.cmbMaNV.getSelectedItem().toString();
+            int soluongdat = Integer.parseInt(txtSoLuongDat.getText());
+//            String DiaChi = txtDiaChi.getText();
+//            String DienThoai = txtSDT.getText();
+            double doanhthu = Double.parseDouble(txtChiPhiToChuc.getText());
+            //------------------------------------------------------------------
+           
+            
+            
+            
+            //------------------------------------------------------------------
+            
+            
+            if(MaBC.length()==0||NgayLap.length()==0) 
+                JOptionPane.showMessageDialog(null,"Vui long nhap day du ","Thong bao",1);
+            else    
+            {
+                pst.setString(1,MaBC);
+                pst.setString(2,MaNV);
+                pst.setString(3,NgayLap);
+                pst.setString(4,TenNhanVien);
+                pst.setInt(5,soluongdat);               
+                pst.setDouble(6,doanhthu);
+                pst.executeUpdate();
+                JOptionPane.showMessageDialog(null,"Thêm Thành Công! ","Thong bao",1);
+                
+            }
+            
+        }
+        catch(Exception e)
+        {
+            JOptionPane.showMessageDialog(null,e);
+        }
+        
+    }//GEN-LAST:event_btnLuuBaoCaoActionPerformed
+
+    
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(LapBaoCao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(LapBaoCao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(LapBaoCao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(LapBaoCao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new LapBaoCao().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(LapBaoCao.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnLuuBaoCao;
+    private javax.swing.JButton btnQuayVeMenu;
+    private javax.swing.JButton btnThoat;
+    private javax.swing.JButton btnXemBaoCao;
+    private javax.swing.JComboBox cmbMaNV;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable tabDT;
+    private javax.swing.JTable tabNV;
+    private javax.swing.JTextField txtChiPhiToChuc;
+    private javax.swing.JTextField txtMaBC;
+    private javax.swing.JTextField txtMaBC1;
+    private com.toedter.calendar.JDateChooser txtNgayLap;
+    private javax.swing.JTextField txtSoLuongDat;
+    private javax.swing.JTextField txtTenNV;
+    // End of variables declaration//GEN-END:variables
+}
